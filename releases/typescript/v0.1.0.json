@@ -1,0 +1,11 @@
+{
+  "api_version": "0.1.0",
+  "backend_source_commit": "7d6c403d44aae2ff7a4a32f97e05b3de5025be6b",
+  "breaking_changes": [],
+  "changelog": "## 0.1.0 - Unreleased",
+  "generator": "@hey-api/openapi-ts@0.99.0",
+  "openapi_sha256": "8d96285808432fb739e2cd8be9f41bb111de3ede03898c0ad5678085335744ac",
+  "schema_version": 1,
+  "sdk_commit": "0ceec34b9b5543265fe4ebf6a2aa977999da6fe1",
+  "sdk_version": "0.1.0"
+}
