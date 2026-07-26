@@ -1,0 +1,44 @@
+{
+  "name": "@messijo/sdk",
+  "version": "0.0.0",
+  "description": "Experimental TypeScript SDK for the Messijo API.",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/messijo-app/sdks.git",
+    "directory": "packages/typescript"
+  },
+  "homepage": "https://github.com/messijo-app/sdks#readme",
+  "bugs": {
+    "url": "https://github.com/messijo-app/sdks/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "typecheck:ts6": "node ../../node_modules/typescript-6/bin/tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "7.0.2",
+    "typescript-6": "npm:typescript@6.0.2"
+  }
+}

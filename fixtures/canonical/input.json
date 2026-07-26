@@ -1,0 +1,25 @@
+{
+  "servers": [
+    {
+      "url": "https://api.messijo.com"
+    }
+  ],
+  "paths": {
+    "/z": {
+      "get": {
+        "operationId": "z"
+      }
+    },
+    "/a": {
+      "post": {
+        "operationId": "a"
+      }
+    }
+  },
+  "openapi": "3.0.0",
+  "info": {
+    "x-stability": "experimental",
+    "version": "0.1.0",
+    "title": "Golden"
+  }
+}

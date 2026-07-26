@@ -1,0 +1,8 @@
+packages:
+  - packages/*
+  - tools/*
+
+catalogMode: strict
+
+onlyBuiltDependencies:
+  - esbuild

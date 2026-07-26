@@ -1,0 +1,74 @@
+name: Publish TypeScript SDK
+
+on:
+  push:
+    tags:
+      - sdk-typescript-v*
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    if: vars.SDK_NPM_PUBLICATION_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: npm-production
+    steps:
+      - name: Check out protected tag
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Confirm tag commit belongs to the default branch
+        shell: bash
+        run: |
+          git fetch origin "${{ github.event.repository.default_branch }}"
+          if git merge-base --is-ancestor "$GITHUB_SHA" "origin/${{ github.event.repository.default_branch }}"; then
+            echo "TAG_ON_DEFAULT_BRANCH=true" >> "$GITHUB_ENV"
+          else
+            echo "TAG_ON_DEFAULT_BRANCH=false" >> "$GITHUB_ENV"
+          fi
+
+      - name: Set up Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.16.0
+
+      - name: Enable pinned pnpm
+        run: corepack enable && corepack install
+
+      - name: Install npm with trusted-publishing support
+        run: npm install --global npm@11.13.0
+
+      - name: Install immutable dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run complete quality gates
+        run: pnpm check && pnpm generate:check
+
+      - name: Inspect the exact tarball
+        run: |
+          pnpm pack:check
+          echo "PACKAGE_ALLOWLIST_PASSED=true" >> "$GITHUB_ENV"
+
+      - name: Enforce fail-closed publication policy
+        env:
+          GITHUB_REF_PROTECTED: ${{ github.ref_protected }}
+          NPM_TRUSTED_PUBLISHER_CONFIGURED:
+            ${{ vars.NPM_TRUSTED_PUBLISHER_CONFIGURED }}
+          SDK_NPM_PUBLICATION_ENABLED: ${{ vars.SDK_NPM_PUBLICATION_ENABLED }}
+        run: node scripts/validate-publication.mjs
+
+      - name: Publish publicly with OIDC provenance
+        working-directory: packages/typescript
+        run: npm publish --access public --provenance
+
+      - name: Verify registry version and provenance
+        shell: bash
+        run: |
+          version="$(node -p "require('./packages/typescript/package.json').version")"
+          test "$(npm view "@messijo/sdk@$version" version)" = "$version"
+          npm view "@messijo/sdk@$version" dist.attestations --json > /tmp/messijo-attestations.json
+          jq -e 'type == "object" and length > 0' /tmp/messijo-attestations.json

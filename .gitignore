@@ -1,0 +1,12 @@
+node_modules/
+dist/
+coverage/
+*.tgz
+*.tsbuildinfo
+.DS_Store
+.env
+.env.*
+!.env.example
+
+# Generated diagnostics must be explicitly selected and safety-scanned.
+artifacts/

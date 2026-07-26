@@ -1,0 +1,1 @@
+{"info":{"title":"Golden","version":"0.1.0","x-stability":"experimental"},"openapi":"3.0.0","paths":{"/a":{"post":{"operationId":"a"}},"/z":{"get":{"operationId":"z"}}},"servers":[{"url":"https://api.messijo.com"}]}

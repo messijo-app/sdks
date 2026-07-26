@@ -1,0 +1,9 @@
+{
+  "kind": "bootstrap-fixture",
+  "publishable": false,
+  "trustedReceiptEligible": false,
+  "source": "../api/openapi.public.json",
+  "reviewedOn": "2026-07-25",
+  "rawSha256": "28dccc9a88a66316c897f645f3c50065a60e7485693766e320c654bcdb6b3722",
+  "canonicalSha256": "8d96285808432fb739e2cd8be9f41bb111de3ede03898c0ad5678085335744ac"
+}

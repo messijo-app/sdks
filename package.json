@@ -1,0 +1,38 @@
+{
+  "name": "@messijo/sdk-workspace",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Generation, verification, and release tooling for Messijo SDKs.",
+  "packageManager": "pnpm@10.24.0",
+  "engines": {
+    "node": ">=24 <25",
+    "pnpm": "10.24.0"
+  },
+  "scripts": {
+    "build": "pnpm --filter @messijo/sdk build",
+    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm safety:scan && pnpm build",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "generate": "node scripts/generate.mjs",
+    "generate:check": "node scripts/generate.mjs --check",
+    "generate:raw": "tools/generator/node_modules/.bin/openapi-ts",
+    "lint": "oxlint --deny-warnings .",
+    "pack:check": "node scripts/pack-check.mjs",
+    "safety:scan": "node scripts/safety-scan.mjs",
+    "test": "vitest run --passWithNoTests",
+    "validate:event": "node scripts/validate-contract-event.mjs",
+    "typecheck": "pnpm --filter @messijo/sdk typecheck",
+    "typecheck:ts6": "pnpm --filter @messijo/sdk typecheck:ts6",
+    "typecheck:ts7": "pnpm typecheck"
+  },
+  "devDependencies": {
+    "@types/node": "24.13.3",
+    "@vitest/coverage-v8": "4.1.10",
+    "happy-dom": "20.11.1",
+    "oxlint": "1.75.0",
+    "prettier": "3.9.6",
+    "typescript": "7.0.2",
+    "typescript-6": "npm:typescript@6.0.2",
+    "vitest": "4.1.10"
+  }
+}

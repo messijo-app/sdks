@@ -1,0 +1,107 @@
+name: Process released API contract
+
+on:
+  repository_dispatch:
+    types: [api-contract-released]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: api-contract-${{ github.event.client_payload.release_tag }}
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out trusted default branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+
+      - name: Set up Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.16.0
+
+      - name: Enable pinned pnpm
+        run: corepack enable && corepack install
+
+      - name: Install immutable dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate and verify production contract
+        run:
+          node scripts/prepare-release.mjs "$GITHUB_EVENT_PATH"
+          artifacts/prepared-release
+
+      - name: Upload verified release input
+        uses: actions/upload-artifact@v4
+        with:
+          name: verified-${{ github.event.client_payload.release_tag }}
+          path: artifacts/prepared-release
+          retention-days: 7
+
+  propose:
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      pull-requests: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      RELEASE_BRANCH: automation/${{ github.event.client_payload.release_tag }}
+    steps:
+      - name: Check out trusted default branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          fetch-depth: 0
+
+      - name: Set up Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.16.0
+
+      - name: Enable pinned pnpm
+        run: corepack enable && corepack install
+
+      - name: Install immutable dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Download verified release input
+        uses: actions/download-artifact@v4
+        with:
+          name: verified-${{ github.event.client_payload.release_tag }}
+          path: artifacts/prepared-release
+
+      - name: Apply receipt and generation plan
+        run: >-
+          node scripts/apply-release.mjs artifacts/prepared-release
+          "https://github.com/${{ github.repository }}/actions/runs/${{
+          github.run_id }}"
+
+      - name: Create or update one review pull request
+        shell: bash
+        run: |
+          git add contracts packages/typescript/src/generated release-bumps
+          if git diff --cached --quiet; then
+            echo "Exact replay produced no repository changes."
+            exit 0
+          fi
+          git config user.name "messijo-sdk-receiver[bot]"
+          git config user.email "messijo-sdk-receiver[bot]@users.noreply.github.com"
+          git switch -C "$RELEASE_BRANCH"
+          git commit -m "Process ${{ github.event.client_payload.release_tag }}"
+          git push --force-with-lease origin "HEAD:$RELEASE_BRANCH"
+          existing="$(gh pr list --head "$RELEASE_BRANCH" --state open --json number --jq '.[0].number // empty')"
+          if [[ -z "$existing" ]]; then
+            gh pr create \
+              --base "${{ github.event.repository.default_branch }}" \
+              --head "$RELEASE_BRANCH" \
+              --title "Process ${{ github.event.client_payload.release_tag }}" \
+              --body "Verified contract receipt and deterministic SDK update. This workflow never publishes npm packages."
+          fi

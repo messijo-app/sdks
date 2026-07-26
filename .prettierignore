@@ -1,0 +1,10 @@
+node_modules/
+dist/
+coverage/
+packages/typescript/src/generated/
+fixtures/openapi/*.json
+fixtures/canonical/expected.json
+contracts/**/*.json
+docs/
+openspec/
+pnpm-lock.yaml
