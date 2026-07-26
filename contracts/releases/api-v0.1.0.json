@@ -1,0 +1,13 @@
+{
+  "api_version": "0.1.0",
+  "backend_source_commit": "7d6c403d44aae2ff7a4a32f97e05b3de5025be6b",
+  "breaking_override_used": false,
+  "change_kind": "additive",
+  "processing_disposition": "latest-generation",
+  "receiver_run_url": "https://github.com/messijo-app/sdks/actions/runs/30180857718",
+  "release_tag": "api-v0.1.0",
+  "schema_version": 1,
+  "spec_sha256": "8d96285808432fb739e2cd8be9f41bb111de3ede03898c0ad5678085335744ac",
+  "spec_url": "https://api.messijo.com/openapi.json",
+  "stability": "experimental"
+}

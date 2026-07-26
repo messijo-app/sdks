@@ -1,0 +1,10 @@
+{
+  "api_version": "0.1.0",
+  "backend_source_commit": "7d6c403d44aae2ff7a4a32f97e05b3de5025be6b",
+  "change_kind": "additive",
+  "generator": "@hey-api/openapi-ts@0.99.0",
+  "recommendation": "minor",
+  "release_tag": "api-v0.1.0",
+  "schema_version": 1,
+  "spec_sha256": "8d96285808432fb739e2cd8be9f41bb111de3ede03898c0ad5678085335744ac"
+}
