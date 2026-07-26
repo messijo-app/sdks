@@ -51,6 +51,9 @@ jobs:
           node scripts/prepare-sdk-release.mjs "${{ inputs.api_release_tag }}"
           "${{ inputs.sdk_version }}" "$GITHUB_SHA"
 
+      - name: Format generated changelog and other artifacts
+        run: pnpm format
+
       - name: Run complete quality gates
         run: pnpm check && pnpm pack:check
 
