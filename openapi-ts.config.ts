@@ -4,7 +4,7 @@ import { resolveOpenApiInput } from './scripts/lib/generation-input.mjs';
 
 const repositoryRoot = import.meta.dirname;
 const configuredInput =
-  process.env.MESSIJO_OPENAPI_INPUT ?? 'fixtures/openapi/intended-0.1.0.json';
+  process.env.MESSIJO_OPENAPI_INPUT ?? 'contracts/current/openapi.json';
 const input = resolveOpenApiInput(repositoryRoot, configuredInput);
 
 export default {

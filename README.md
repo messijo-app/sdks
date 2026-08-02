@@ -111,11 +111,16 @@ pnpm generate:check
 pnpm pack:check
 ```
 
-Generated source is committed for review and must not be edited by hand.
-Generation reads only the reviewed repository contract and uses the exactly
-pinned generator. `pnpm generate:check` deletes and regenerates the generated
-tree and fails if the committed output is stale. `pnpm pack:check` inspects the
-actual tarball and installs it into a temporary consumer project.
+Generated source is committed for review and must not be edited by hand. Routine
+generation reads `contracts/current/openapi.json`, the reviewed canonical
+contract in the checked-out revision, and uses the exactly pinned generator.
+Isolated tests may explicitly set `MESSIJO_OPENAPI_INPUT` to a repository-local
+fixture; URI inputs and paths outside this repository are rejected.
+`pnpm generate:check` deletes and regenerates the generated tree, then compares
+it with the committed output of the same revision. It fails for stale, missing,
+or newly generated files but ignores unrelated repository changes.
+`pnpm pack:check` inspects the actual tarball and installs it into a temporary
+consumer project.
 
 ## Release and repair flow
 

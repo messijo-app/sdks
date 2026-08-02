@@ -1,9 +1,9 @@
 # npm Publication Bootstrap
 
-`@messijo/sdk` is intentionally not reserved with a placeholder release. npm
-creates a scoped package on its first public publish, and published versions
-cannot be replaced. The first publish must therefore be the final reviewed
-`0.1.0` artifact.
+`@messijo/sdk` was intentionally not reserved with a placeholder release. npm
+created the scoped package from the final reviewed `0.1.0` artifact because
+published versions cannot be replaced. This document records that one-time
+exception and the controls required for routine publication.
 
 ## Confirmed administrative state
 
@@ -11,7 +11,9 @@ As of July 25, 2026:
 
 - npm user `cmgriffing` is an owner of the `messijo` npm organization.
 - The npm account uses two-factor authentication for authorization and writes.
-- `@messijo/sdk` is unclaimed.
+- `@messijo/sdk@0.1.0` is public on npm.
+- Protected tag `sdk-typescript-v0.1.0` points to SDK commit
+  `5e470d914bdcd25192fd1865b5a8cc67a0aedc37`.
 - GitHub user `cmgriffing` is the only administrator of
   `messijo-app/sdks` and is the named `npm-production` approver.
 - The `npm-production` environment accepts only tags matching
@@ -24,12 +26,10 @@ Self-review remains allowed because there is one repository administrator.
 Add another required reviewer and enable prevention of self-review when a
 second release maintainer is available.
 
-## One-time `0.1.0` package creation
+## Completed one-time `0.1.0` package creation
 
-Do not run these steps until the verified production contract receipt and
-generated SDK change have merged, the release-preparation change has set the
-package version to `0.1.0`, and the protected
-`sdk-typescript-v0.1.0` tag points to the default branch.
+The following procedure is retained as an audit record. Do not repeat it for
+later versions; routine releases use trusted publishing.
 
 1. Approve the `npm-production` release gate.
 2. Check out the exact protected tag and run:
@@ -49,24 +49,25 @@ package version to `0.1.0`, and the protected
    npm view @messijo/sdk
    ```
 
-   The last command must report that the package is not found. If it resolves,
-   stop and inspect the package owner and contents.
+   Before the first publish, the last command reported that the package was not
+   found.
 
 4. Record the SHA-256 digest of
    `artifacts/package/messijo-sdk-0.1.0.tgz`, then publish that exact tarball
    interactively:
 
    ```sh
-   npm publish artifacts/package/messijo-sdk-0.1.0.tgz --access public
+   npm publish artifacts/package/messijo-sdk-0.1.0.tgz \
+     --access public \
+     --provenance=false
    ```
 
    Complete npm's two-factor-authentication challenge. Do not create or store
    an npm write token in this repository or in GitHub.
 
-5. Confirm `npm view @messijo/sdk@0.1.0 version` returns `0.1.0`. Record the
-   protected tag, SDK commit, tarball digest, registry URL, and the fact that
-   this bootstrap release lacks GitHub OIDC provenance in the GitHub release
-   notes.
+5. `npm view @messijo/sdk@0.1.0 version` now returns `0.1.0`. The bootstrap
+   release lacks GitHub OIDC provenance and must remain identified as the
+   one-time exception in public release metadata.
 
 ## Enable trusted publishing immediately afterward
 

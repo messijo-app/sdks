@@ -1,8 +1,9 @@
 # Bootstrap OpenAPI fixture
 
 `intended-0.1.0.json` is a reviewed copy of the backend-owned intended public
-contract. It exists only to bootstrap generation and consumer tests before the
-production release receiver establishes a trusted baseline.
+contract. It remains available only for isolated tests that select it through an
+explicit repository-local input override; routine generation defaults to
+`contracts/current/openapi.json`.
 
 This fixture is **not release authority**. It cannot create a trusted receipt,
 replace `contracts/current/openapi.json`, enable a publication workflow, or

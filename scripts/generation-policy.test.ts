@@ -2,7 +2,7 @@ import { execFileSync } from 'node:child_process';
 import { readFileSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { resolveOpenApiInput } from './lib/generation-input.mjs';
 
@@ -13,7 +13,47 @@ const fixtureMetadataPath = path.join(
 );
 const receiptsDirectory = path.join(repositoryRoot, 'contracts/releases');
 
+const loadConfiguredInput = async (configuredInput?: string) => {
+  const previousInput = process.env.MESSIJO_OPENAPI_INPUT;
+  if (configuredInput === undefined) {
+    delete process.env.MESSIJO_OPENAPI_INPUT;
+  } else {
+    process.env.MESSIJO_OPENAPI_INPUT = configuredInput;
+  }
+  vi.resetModules();
+
+  try {
+    const { default: config } = await import('../openapi-ts.config');
+    return config.input;
+  } finally {
+    if (previousInput === undefined) {
+      delete process.env.MESSIJO_OPENAPI_INPUT;
+    } else {
+      process.env.MESSIJO_OPENAPI_INPUT = previousInput;
+    }
+  }
+};
+
 describe('generation input policy', () => {
+  it('uses the canonical contract by default', async () => {
+    await expect(loadConfiguredInput()).resolves.toBe(
+      path.join(repositoryRoot, 'contracts/current/openapi.json'),
+    );
+  });
+
+  it('preserves explicit repository-local fixture and receiver inputs', async () => {
+    await expect(
+      loadConfiguredInput('fixtures/openapi/intended-0.1.0.json'),
+    ).resolves.toBe(
+      path.join(repositoryRoot, 'fixtures/openapi/intended-0.1.0.json'),
+    );
+    await expect(
+      loadConfiguredInput('contracts/current/openapi.json'),
+    ).resolves.toBe(
+      path.join(repositoryRoot, 'contracts/current/openapi.json'),
+    );
+  });
+
   it('resolves only repository-local files', () => {
     expect(
       resolveOpenApiInput(
