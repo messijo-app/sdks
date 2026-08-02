@@ -83,15 +83,89 @@ export type CreateKeywordParams = {
 };
 
 /**
+ * CreateNotificationDiscordParams
+ *
+ * A Discord Notification
+ */
+export type CreateNotificationDiscordParams = {
+  name: string;
+  type: "discord";
+};
+
+/**
+ * CreateNotificationEmailParams
+ *
+ * An Email Notification
+ */
+export type CreateNotificationEmailParams = {
+  /**
+   * The batch interval in minutes. Multiple notifications within this time frame will be batched into a single email.
+   */
+  batch_interval_minutes: number;
+  /**
+   * The email to send the notification to. You will need to verify ownership of this email before we will send notifications to it.
+   */
+  email: string;
+  name: string;
+  type: "email";
+};
+
+/**
  * CreateNotificationParams
  *
  * The params for a new notification
  */
 export type CreateNotificationParams =
-  | NotificationEmail
-  | NotificationSms
-  | NotificationWebhook
-  | NotificationCommon;
+  | ({
+      type: "email";
+    } & CreateNotificationEmailParams)
+  | ({
+      type: "sms";
+    } & CreateNotificationSmsParams)
+  | ({
+      type: "slack";
+    } & CreateNotificationSlackParams)
+  | ({
+      type: "discord";
+    } & CreateNotificationDiscordParams)
+  | ({
+      type: "webhook";
+    } & CreateNotificationWebhookParams);
+
+/**
+ * CreateNotificationSMSParams
+ *
+ * An SMS Notification
+ */
+export type CreateNotificationSmsParams = {
+  batch_interval_minutes: number;
+  name: string;
+  phone_number: string;
+  type: "sms";
+};
+
+/**
+ * CreateNotificationSlackParams
+ *
+ * A Slack Notification
+ */
+export type CreateNotificationSlackParams = {
+  name: string;
+  type: "slack";
+};
+
+/**
+ * CreateNotificationWebhookParams
+ *
+ * A Webhook Notification
+ */
+export type CreateNotificationWebhookParams = {
+  content_type: "application/json" | "application/x-www-form-urlencoded";
+  name: string;
+  secret_key: string;
+  type: "webhook";
+  url: string;
+};
 
 /**
  * CreateOrgParams
@@ -706,16 +780,6 @@ export type MarkAllKeywordEventsAsReadParams = {
 };
 
 /**
- * NotificationCommon
- *
- * Properties common to all Notifications
- */
-export type NotificationCommon = {
-  name: string;
-  type: "email" | "sms" | "slack" | "discord" | "webhook";
-};
-
-/**
  * NotificationCommonResponse
  *
  * Properties common to all Notifications
@@ -742,23 +806,8 @@ export type NotificationCommonResponse = {
 export type NotificationDiscordResponse = NotificationCommonResponse & {
   discord_channel: string | null;
   discord_server: string | null;
+  type?: "discord";
   webhook_url: string | null;
-};
-
-/**
- * NotificationEmail
- *
- * An Email Notification
- */
-export type NotificationEmail = NotificationCommon & {
-  /**
-   * The batch interval in minutes. Multiple notifications within this time frame will be batched into a single email.
-   */
-  batch_interval_minutes: number;
-  /**
-   * The email to send the notification to. You will need to verify ownership of this email before we will send notifications to it.
-   */
-  email: string;
 };
 
 /**
@@ -769,6 +818,7 @@ export type NotificationEmail = NotificationCommon & {
 export type NotificationEmailResponse = NotificationCommonResponse & {
   batch_interval_minutes: number;
   email: string;
+  type?: "email";
   verified_at: string | null;
 };
 
@@ -778,21 +828,21 @@ export type NotificationEmailResponse = NotificationCommonResponse & {
  * A Notification
  */
 export type NotificationResponse =
-  | NotificationEmailResponse
-  | NotificationSmsResponse
-  | NotificationSlackResponse
-  | NotificationDiscordResponse
-  | NotificationWebhookResponse;
-
-/**
- * NotificationSMS
- *
- * An SMS Notification
- */
-export type NotificationSms = NotificationCommon & {
-  batch_interval_minutes: number;
-  phone_number: string;
-};
+  | ({
+      type: "email";
+    } & NotificationEmailResponse)
+  | ({
+      type: "sms";
+    } & NotificationSmsResponse)
+  | ({
+      type: "slack";
+    } & NotificationSlackResponse)
+  | ({
+      type: "discord";
+    } & NotificationDiscordResponse)
+  | ({
+      type: "webhook";
+    } & NotificationWebhookResponse);
 
 /**
  * NotificationSMSResponse
@@ -802,6 +852,7 @@ export type NotificationSms = NotificationCommon & {
 export type NotificationSmsResponse = NotificationCommonResponse & {
   batch_interval_minutes: number;
   phone_number: string;
+  type?: "sms";
   verified_at: string | null;
 };
 
@@ -813,18 +864,8 @@ export type NotificationSmsResponse = NotificationCommonResponse & {
 export type NotificationSlackResponse = NotificationCommonResponse & {
   slack_channel: string | null;
   slack_workspace: string | null;
+  type?: "slack";
   webhook_url: string | null;
-};
-
-/**
- * NotificationWebhook
- *
- * An Webhook Notification
- */
-export type NotificationWebhook = NotificationCommon & {
-  content_type: "application/json" | "application/x-www-form-urlencoded";
-  secret_key: string;
-  url: string;
 };
 
 /**
@@ -834,6 +875,7 @@ export type NotificationWebhook = NotificationCommon & {
  */
 export type NotificationWebhookResponse = NotificationCommonResponse & {
   content_type: string;
+  type?: "webhook";
   url: string;
   validated_at: number;
 };
@@ -1158,13 +1200,21 @@ export type UpdateKeywordParams = {
 /**
  * UpdateNotificationParams
  *
- * The params for a new notification
+ * The params for updating a notification selected by ID
  */
-export type UpdateNotificationParams =
-  | NotificationEmail
-  | NotificationSms
-  | NotificationWebhook
-  | NotificationCommon;
+export type UpdateNotificationParams = {
+  /**
+   * The batch interval in minutes
+   */
+  batch_interval_minutes?: number;
+  content_type?: "application/json" | "application/x-www-form-urlencoded";
+  /**
+   * The name of the notification
+   */
+  name: string;
+  secret_key?: string;
+  url?: string;
+};
 
 /**
  * UpdateOrgUserParams
