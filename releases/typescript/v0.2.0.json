@@ -1,0 +1,13 @@
+{
+  "api_version": "0.2.0",
+  "backend_source_commit": "83468a96a788dd5aa01276ab2360e18f5bd826e3",
+  "breaking_changes": [
+    "Implemented proper discriminator support in the OpenAPI spec"
+  ],
+  "changelog": "## 0.2.0 - Unreleased",
+  "generator": "@hey-api/openapi-ts@0.99.0",
+  "openapi_sha256": "1015fddea12baf9c260f7d711275d5d615b7e2fc4b50045293b784701f17b095",
+  "schema_version": 1,
+  "sdk_commit": "9b0906a1eb3076fbb741934bafc33a2c52935fe6",
+  "sdk_version": "0.2.0"
+}
