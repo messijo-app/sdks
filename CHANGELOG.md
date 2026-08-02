@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.2.0 - Unreleased
+
+> Experimental SDK: compatibility is not guaranteed until 1.0.0.
+
+**BREAKING:** Implemented proper discriminator support in the OpenAPI spec
+
+- API contract: `0.2.0`
+- Backend source: `83468a96a788dd5aa01276ab2360e18f5bd826e3`
+- OpenAPI SHA-256:
+  `1015fddea12baf9c260f7d711275d5d615b7e2fc4b50045293b784701f17b095`
+- Generator: `@hey-api/openapi-ts@0.99.0`
+- SDK base commit: `9b0906a1eb3076fbb741934bafc33a2c52935fe6`
+
 ## 0.1.0 - Unreleased
 
 > Experimental SDK: compatibility is not guaranteed until 1.0.0.
