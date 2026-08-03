@@ -1,6 +1,6 @@
 {
   "name": "@messijo/sdk",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Experimental TypeScript SDK for the Messijo API.",
   "type": "module",
   "sideEffects": false,

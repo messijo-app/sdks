@@ -1,0 +1,13 @@
+{
+  "api_version": "0.3.0",
+  "backend_source_commit": "cc115c90717fe1b70362216a10a0f2d87ef386d0",
+  "breaking_changes": [
+    "Improve discriminator support for UpdateNotificationPrams"
+  ],
+  "changelog": "## 0.3.0 - Unreleased",
+  "generator": "@hey-api/openapi-ts@0.99.0",
+  "openapi_sha256": "533dbf172fc5843a6abebc3d65e94489d97a4d4c09ca00a00a0219ded1873bae",
+  "schema_version": 1,
+  "sdk_commit": "1a434f8ddbcade72e40a7672d12a6f9790cc1a8b",
+  "sdk_version": "0.3.0"
+}
