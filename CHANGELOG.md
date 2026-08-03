@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.3.0 - Unreleased
+
+> Experimental SDK: compatibility is not guaranteed until 1.0.0.
+
+**BREAKING:** Improve discriminator support for UpdateNotificationPrams
+
+- API contract: `0.3.0`
+- Backend source: `cc115c90717fe1b70362216a10a0f2d87ef386d0`
+- OpenAPI SHA-256:
+  `533dbf172fc5843a6abebc3d65e94489d97a4d4c09ca00a00a0219ded1873bae`
+- Generator: `@hey-api/openapi-ts@0.99.0`
+- SDK base commit: `1a434f8ddbcade72e40a7672d12a6f9790cc1a8b`
+
 ## 0.2.0 - Unreleased
 
 > Experimental SDK: compatibility is not guaranteed until 1.0.0.
