@@ -1198,22 +1198,60 @@ export type UpdateKeywordParams = {
 };
 
 /**
+ * UpdateNotificationEmailParams
+ *
+ * The params for updating an email notification
+ */
+export type UpdateNotificationEmailParams = {
+  /**
+   * The batch interval in minutes
+   */
+  batch_interval_minutes: number;
+  name: string;
+  type: "email";
+};
+
+/**
  * UpdateNotificationParams
  *
  * The params for updating a notification selected by ID
  */
-export type UpdateNotificationParams = {
+export type UpdateNotificationParams =
+  | ({
+      type: "email";
+    } & UpdateNotificationEmailParams)
+  | ({
+      type: "sms";
+    } & UpdateNotificationSmsParams)
+  | ({
+      type: "webhook";
+    } & UpdateNotificationWebhookParams);
+
+/**
+ * UpdateNotificationSMSParams
+ *
+ * The params for updating an SMS notification
+ */
+export type UpdateNotificationSmsParams = {
   /**
    * The batch interval in minutes
    */
-  batch_interval_minutes?: number;
-  content_type?: "application/json" | "application/x-www-form-urlencoded";
-  /**
-   * The name of the notification
-   */
+  batch_interval_minutes: number;
+  name: string;
+  type: "sms";
+};
+
+/**
+ * UpdateNotificationWebhookParams
+ *
+ * The params for updating a webhook notification
+ */
+export type UpdateNotificationWebhookParams = {
+  content_type: "application/json" | "application/x-www-form-urlencoded";
   name: string;
   secret_key?: string;
-  url?: string;
+  type: "webhook";
+  url: string;
 };
 
 /**
