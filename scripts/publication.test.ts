@@ -141,7 +141,7 @@ describe('release workflow policy', () => {
     expect(workflow).not.toContain('NODE_AUTH_TOKEN');
   });
 
-  it('prepares releases through a reviewed pull request', async () => {
+  it('prepares immutable branch candidates through a least-privilege pull request', async () => {
     const workflow = await readFile(
       path.resolve(
         import.meta.dirname,
@@ -150,7 +150,25 @@ describe('release workflow policy', () => {
       'utf8',
     );
     expect(workflow).toContain('workflow_dispatch');
+    expect(workflow).toContain('run-name:\n  TypeScript SDK v');
+    expect(workflow).toContain('example api-v0.2.0');
+    expect(workflow).toContain('example 0.3.0');
+    expect(workflow).toContain('permissions:\n  contents: read');
+    expect(workflow).toContain('validate-candidate:');
+    expect(workflow).toContain('ref: ${{ github.sha }}');
+    expect(workflow).toContain('refs/remotes/origin/${DEFAULT_BRANCH}');
+    expect(workflow).toContain('validate-release-candidate.mjs');
+    expect(workflow).toContain('needs: validate-candidate');
+    expect(workflow).toContain('contents: write\n      pull-requests: write');
+    expect(workflow).toContain('Repeat candidate validation before mutation');
+    expect(workflow).toContain('sdk_commit="$(git rev-parse HEAD)"');
     expect(workflow).toContain('node scripts/prepare-sdk-release.mjs');
+    expect(workflow).toContain('steps.provenance.outputs.sdk_commit');
     expect(workflow).toContain('gh pr create');
+    expect(workflow).toContain('GITHUB_STEP_SUMMARY');
+    expect(workflow).toContain('Recovery:');
+    expect(workflow).not.toContain(
+      'ref: ${{ github.event.repository.default_branch }}',
+    );
   });
 });

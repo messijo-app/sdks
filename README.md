@@ -124,6 +124,11 @@ consumer project.
 
 ## Release and repair flow
 
+Maintainers should follow the
+[contract intake and SDK release runbook](docs/contract-and-sdk-release-runbook.md)
+for the ordered operational checklist, workflow catalog, exact candidate and tag
+checks, and failure recovery.
+
 1. The backend emits an authenticated release event only after production
    deployment and live contract checksum verification.
 2. The receiver validates the event, downloads the production contract, records
@@ -142,7 +147,7 @@ backend event is safe. If delivery is missing or uncertain, use the backend's
 release-repair workflow; do not manufacture a dispatch payload. A version
 already accepted by npm is immutable and must be corrected with a new version.
 
-Maintainers can consult the [repository handoff](docs/sdk-repository-handoff.md)
-for the cross-repository contract and the
-[npm publication runbook](docs/npm-publication-bootstrap.md) for registry
-controls.
+The runbook retains focused links to the
+[repository handoff](docs/sdk-repository-handoff.md) for the cross-repository
+contract and the [npm publication runbook](docs/npm-publication-bootstrap.md)
+for registry controls.
