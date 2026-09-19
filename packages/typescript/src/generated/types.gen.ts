@@ -759,6 +759,84 @@ export type ListOrgUsersResponse = {
 };
 
 /**
+ * ListOrgsResponse
+ *
+ * List all orgs
+ */
+export type ListOrgsResponse = {
+  orgs: Array<{
+    billing: {
+      /**
+       * The org billing tier compound keywords
+       */
+      compound_keywords: boolean;
+      /**
+       * The org billing tier events
+       */
+      events: number;
+      /**
+       * The org billing tier id
+       */
+      id: string;
+      /**
+       * The org billing tier keywords
+       */
+      keywords: number;
+      /**
+       * The org billing tier lens results
+       */
+      lens_results: number;
+      /**
+       * The org billing tier name
+       */
+      name: string;
+      /**
+       * The org billing tier sms notifications
+       */
+      sms_notifications: boolean;
+      /**
+       * The org billing tier webhook notifications
+       */
+      webhook_notifications: boolean;
+    };
+    experimental_features: {
+      /**
+       * The org experimental features agents
+       */
+      agents: boolean;
+      /**
+       * The org experimental features lenses
+       */
+      lenses: boolean;
+      /**
+       * The org experimental features sentiment
+       */
+      sentiment: boolean;
+    };
+    /**
+     * The org id
+     */
+    id: string;
+    /**
+     * The date and time the org was inserted at
+     */
+    inserted_at: string;
+    /**
+     * The org name
+     */
+    name: string;
+    /**
+     * The user's role in the org
+     */
+    role: "admin" | "write" | "read";
+    /**
+     * The date and time the org was updated at
+     */
+    updated_at: string;
+  }>;
+};
+
+/**
  * ListPendingKeywordLensEventsResponse
  *
  * List pending events for a keyword lens
@@ -875,6 +953,7 @@ export type NotificationSlackResponse = NotificationCommonResponse & {
  */
 export type NotificationWebhookResponse = NotificationCommonResponse & {
   content_type: string;
+  secret_key?: string | null;
   type?: "webhook";
   url: string;
   validated_at: number;
@@ -1198,6 +1277,16 @@ export type UpdateKeywordParams = {
 };
 
 /**
+ * UpdateNotificationDiscordParams
+ *
+ * The params for updating a discord notification
+ */
+export type UpdateNotificationDiscordParams = {
+  name: string;
+  type: "discord";
+};
+
+/**
  * UpdateNotificationEmailParams
  *
  * The params for updating an email notification
@@ -1224,6 +1313,12 @@ export type UpdateNotificationParams =
       type: "sms";
     } & UpdateNotificationSmsParams)
   | ({
+      type: "slack";
+    } & UpdateNotificationSlackParams)
+  | ({
+      type: "discord";
+    } & UpdateNotificationDiscordParams)
+  | ({
       type: "webhook";
     } & UpdateNotificationWebhookParams);
 
@@ -1239,6 +1334,16 @@ export type UpdateNotificationSmsParams = {
   batch_interval_minutes: number;
   name: string;
   type: "sms";
+};
+
+/**
+ * UpdateNotificationSlackParams
+ *
+ * The params for updating a slack notification
+ */
+export type UpdateNotificationSlackParams = {
+  name: string;
+  type: "slack";
 };
 
 /**
@@ -1265,6 +1370,23 @@ export type UpdateOrgUserParams = {
    */
   role: "admin" | "write" | "read";
 };
+
+export type ListOrganizationsData = {
+  body?: never;
+  path?: never;
+  query?: never;
+  url: "/api/orgs";
+};
+
+export type ListOrganizationsResponses = {
+  /**
+   * Orgs list response
+   */
+  200: ListOrgsResponse;
+};
+
+export type ListOrganizationsResponse =
+  ListOrganizationsResponses[keyof ListOrganizationsResponses];
 
 export type DeleteOrganizationData = {
   body?: never;
