@@ -78,6 +78,8 @@ import type {
   ListNotificationsResponses,
   ListOrganizationKeywordLensesData,
   ListOrganizationKeywordLensesResponses,
+  ListOrganizationsData,
+  ListOrganizationsResponses,
   ListOrganizationUsersData,
   ListOrganizationUsersResponses,
   ListPendingKeywordLensResultsData,
@@ -143,6 +145,25 @@ export type Options<
    */
   meta?: keyof ClientMeta extends never ? Record<string, unknown> : ClientMeta;
 };
+
+/**
+ * List orgs
+ */
+export const listOrganizations = <ThrowOnError extends boolean = false>(
+  options?: Options<ListOrganizationsData, ThrowOnError>,
+): RequestResult<ListOrganizationsResponses, unknown, ThrowOnError> =>
+  (options?.client ?? client).get<
+    ListOrganizationsResponses,
+    unknown,
+    ThrowOnError
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      { name: "X-API-Key", type: "apiKey" },
+    ],
+    url: "/api/orgs",
+    ...options,
+  });
 
 /**
  * Delete keyword
