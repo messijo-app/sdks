@@ -23,6 +23,10 @@ export type CreateKeywordEventParams = {
  */
 export type CreateKeywordLensParams = {
   /**
+   * Whether the lens automatically evaluates new events
+   */
+  enabled: boolean;
+  /**
    * The lens name
    */
   name: string;
@@ -55,7 +59,7 @@ export type CreateKeywordParams = {
    */
   ignored_users: Array<{
     name: string;
-    platform: "bluesky" | "lobsters" | "hackernews";
+    platform: "bluesky" | "lobsters" | "hackernews" | "lemmy.world";
   }>;
   /**
    * Whether the keyword should be treated as a whole word
@@ -71,7 +75,7 @@ export type CreateKeywordParams = {
   /**
    * The list of platforms
    */
-  platforms: Array<"bluesky" | "lobsters" | "hackernews">;
+  platforms: Array<"bluesky" | "lobsters" | "hackernews" | "lemmy.world">;
   /**
    * The keyword type
    */
@@ -243,7 +247,7 @@ export type FullKeywordEventResponse = {
   /**
    * The keyword event platform
    */
-  platform: "bluesky" | "lobsters" | "hackernews";
+  platform: "bluesky" | "lobsters" | "hackernews" | "lemmy.world";
   /**
    * The keyword event posted at
    */
@@ -287,7 +291,7 @@ export type KeywordEventResponse = {
   /**
    * The keyword event platform
    */
-  platform: "bluesky" | "lobsters" | "hackernews";
+  platform: "bluesky" | "lobsters" | "hackernews" | "lemmy.world";
   /**
    * The keyword event posted at
    */
@@ -319,6 +323,16 @@ export type KeywordEventTotalsResponse = {
       unread: number;
     };
     hackernews: {
+      /**
+       * The number of read events
+       */
+      read: number;
+      /**
+       * The number of unread events
+       */
+      unread: number;
+    };
+    "lemmy.world": {
       /**
        * The number of read events
        */
@@ -388,6 +402,10 @@ export type KeywordLensNotificationResponse = {
  */
 export type KeywordLensResponse = {
   /**
+   * Whether the lens automatically evaluates new events
+   */
+  enabled: boolean;
+  /**
    * The lens id
    */
   id: string;
@@ -396,7 +414,7 @@ export type KeywordLensResponse = {
    */
   inserted_at: string;
   /**
-   * The lens last run date
+   * The acceptance time of the latest manual run
    */
   last_run_date: string | null;
   /**
@@ -443,7 +461,7 @@ export type KeywordLensResultResponse = {
   /**
    * The event platform
    */
-  event_platform: "bluesky" | "lobsters" | "hackernews";
+  event_platform: "bluesky" | "lobsters" | "hackernews" | "lemmy.world";
   /**
    * The event posted at
    */
@@ -525,6 +543,16 @@ export type KeywordLensResultTotalsResponse = {
        */
       unread: number;
     };
+    "lemmy.world": {
+      /**
+       * The number of read events
+       */
+      read: number;
+      /**
+       * The number of unread events
+       */
+      unread: number;
+    };
     lobsters: {
       /**
        * The number of read events
@@ -553,7 +581,7 @@ export type KeywordLensResultTotalsResponse = {
 /**
  * KeywordLensStatusResponse
  *
- * The Notifications for this Keyword
+ * Current manual dispatch and evaluation status
  */
 export type KeywordLensStatusResponse = {
   /**
@@ -561,7 +589,7 @@ export type KeywordLensStatusResponse = {
    */
   id: string;
   /**
-   * The lens last run date
+   * The acceptance time of the latest manual run
    */
   last_run_date: string | null;
   /**
@@ -573,11 +601,11 @@ export type KeywordLensStatusResponse = {
    */
   pending_events: number;
   /**
-   * The lens queued events
+   * Live evaluation jobs; excludes background dispatch
    */
   queued_events: number;
   /**
-   * The lens status
+   * Running while dispatch or evaluations are live; queued_events may be zero
    */
   status: "running" | "stopped";
 };
@@ -635,7 +663,7 @@ export type KeywordResponse = {
   ignored_users: Array<{
     id: string;
     name: string;
-    platform: "bluesky" | "lobsters" | "hackernews";
+    platform: "bluesky" | "lobsters" | "hackernews" | "lemmy.world";
   }>;
   /**
    * The date and time the keyword was inserted
@@ -650,7 +678,7 @@ export type KeywordResponse = {
   /**
    * The list of platforms
    */
-  platforms: Array<"bluesky" | "lobsters" | "hackernews">;
+  platforms: Array<"bluesky" | "lobsters" | "hackernews" | "lemmy.world">;
   /**
    * The number of read events for this keyword
    */
@@ -692,7 +720,7 @@ export type KeywordStatsResponse = {
  * Get all lenses
  */
 export type ListAllLensesResponse = {
-  lenses?: unknown;
+  lenses: unknown;
 };
 
 /**
@@ -759,6 +787,84 @@ export type ListOrgUsersResponse = {
 };
 
 /**
+ * ListOrgsResponse
+ *
+ * List all orgs
+ */
+export type ListOrgsResponse = {
+  orgs: Array<{
+    billing: {
+      /**
+       * The org billing tier compound keywords
+       */
+      compound_keywords: boolean;
+      /**
+       * The org billing tier events
+       */
+      events: number;
+      /**
+       * The org billing tier id
+       */
+      id: string;
+      /**
+       * The org billing tier keywords
+       */
+      keywords: number;
+      /**
+       * The org billing tier lens results
+       */
+      lens_results: number;
+      /**
+       * The org billing tier name
+       */
+      name: string;
+      /**
+       * The org billing tier sms notifications
+       */
+      sms_notifications: boolean;
+      /**
+       * The org billing tier webhook notifications
+       */
+      webhook_notifications: boolean;
+    };
+    experimental_features: {
+      /**
+       * The org experimental features agents
+       */
+      agents: boolean;
+      /**
+       * The org experimental features lenses
+       */
+      lenses: boolean;
+      /**
+       * The org experimental features sentiment
+       */
+      sentiment: boolean;
+    };
+    /**
+     * The org id
+     */
+    id: string;
+    /**
+     * The date and time the org was inserted at
+     */
+    inserted_at: string;
+    /**
+     * The org name
+     */
+    name: string;
+    /**
+     * The user's role in the org
+     */
+    role: "admin" | "write" | "read";
+    /**
+     * The date and time the org was updated at
+     */
+    updated_at: string;
+  }>;
+};
+
+/**
  * ListPendingKeywordLensEventsResponse
  *
  * List pending events for a keyword lens
@@ -817,6 +923,25 @@ export type NotificationDiscordResponse = NotificationCommonResponse & {
  */
 export type NotificationEmailResponse = NotificationCommonResponse & {
   batch_interval_minutes: number;
+  /**
+   * Counted delivery failures since the last successful verification
+   */
+  delivery_failure_count: number;
+  /**
+   * Lifetime counted delivery failures
+   */
+  delivery_failure_count_total: number;
+  disabled_at: string | null;
+  /**
+   * Why notification delivery was disabled, when disabled
+   */
+  disabled_reason:
+    | "failure_threshold"
+    | "hard_bounce"
+    | "suppressed"
+    | "invalid_address"
+    | "spam_report"
+    | null;
   email: string;
   type?: "email";
   verified_at: string | null;
@@ -875,6 +1000,7 @@ export type NotificationSlackResponse = NotificationCommonResponse & {
  */
 export type NotificationWebhookResponse = NotificationCommonResponse & {
   content_type: string;
+  secret_key?: string | null;
   type?: "webhook";
   url: string;
   validated_at: number;
@@ -1042,7 +1168,7 @@ export type PendingKeywordLensEventResponse = {
   /**
    * The keyword event platform
    */
-  platform: "bluesky" | "lobsters" | "hackernews";
+  platform: "bluesky" | "lobsters" | "hackernews" | "lemmy.world";
   /**
    * The keyword event posted at
    */
@@ -1126,6 +1252,10 @@ export type UpdateKeywordLensNotificationResponse = {
  */
 export type UpdateKeywordLensParams = {
   /**
+   * Whether the lens automatically evaluates new events
+   */
+  enabled: boolean;
+  /**
    * The lens name
    */
   name: string;
@@ -1179,7 +1309,7 @@ export type UpdateKeywordParams = {
    */
   ignored_users: Array<{
     name: string;
-    platform: "bluesky" | "lobsters" | "hackernews";
+    platform: "bluesky" | "lobsters" | "hackernews" | "lemmy.world";
   }>;
   /**
    * Whether the keyword should be treated as a whole word
@@ -1194,7 +1324,17 @@ export type UpdateKeywordParams = {
   /**
    * The list of platforms
    */
-  platforms: Array<"bluesky" | "lobsters" | "hackernews">;
+  platforms: Array<"bluesky" | "lobsters" | "hackernews" | "lemmy.world">;
+};
+
+/**
+ * UpdateNotificationDiscordParams
+ *
+ * The params for updating a discord notification
+ */
+export type UpdateNotificationDiscordParams = {
+  name: string;
+  type: "discord";
 };
 
 /**
@@ -1224,6 +1364,12 @@ export type UpdateNotificationParams =
       type: "sms";
     } & UpdateNotificationSmsParams)
   | ({
+      type: "slack";
+    } & UpdateNotificationSlackParams)
+  | ({
+      type: "discord";
+    } & UpdateNotificationDiscordParams)
+  | ({
       type: "webhook";
     } & UpdateNotificationWebhookParams);
 
@@ -1239,6 +1385,16 @@ export type UpdateNotificationSmsParams = {
   batch_interval_minutes: number;
   name: string;
   type: "sms";
+};
+
+/**
+ * UpdateNotificationSlackParams
+ *
+ * The params for updating a slack notification
+ */
+export type UpdateNotificationSlackParams = {
+  name: string;
+  type: "slack";
 };
 
 /**
@@ -1265,6 +1421,23 @@ export type UpdateOrgUserParams = {
    */
   role: "admin" | "write" | "read";
 };
+
+export type ListOrganizationsData = {
+  body?: never;
+  path?: never;
+  query?: never;
+  url: "/api/orgs";
+};
+
+export type ListOrganizationsResponses = {
+  /**
+   * Orgs list response
+   */
+  200: ListOrgsResponse;
+};
+
+export type ListOrganizationsResponse =
+  ListOrganizationsResponses[keyof ListOrganizationsResponses];
 
 export type DeleteOrganizationData = {
   body?: never;
@@ -1631,7 +1804,7 @@ export type ListKeywordEventsData = {
     /**
      * Platform
      */
-    platform?: "all" | "bluesky" | "lobsters" | "hackernews";
+    platform?: "all" | "bluesky" | "lobsters" | "hackernews" | "lemmy.world";
   };
   url: "/api/orgs/{org_id}/keywords/{keyword_id}/events";
 };
@@ -1682,7 +1855,7 @@ export type ExportKeywordEventsData = {
     /**
      * Platform
      */
-    platform?: "all" | "bluesky" | "lobsters" | "hackernews";
+    platform?: "all" | "bluesky" | "lobsters" | "hackernews" | "lemmy.world";
   };
   url: "/api/orgs/{org_id}/keywords/{keyword_id}/events/export/{format}";
 };
@@ -1737,7 +1910,7 @@ export type ListFullKeywordEventsData = {
     /**
      * Platform
      */
-    platform?: "all" | "bluesky" | "lobsters" | "hackernews";
+    platform?: "all" | "bluesky" | "lobsters" | "hackernews" | "lemmy.world";
   };
   url: "/api/orgs/{org_id}/keywords/{keyword_id}/events/full";
 };
@@ -2264,7 +2437,7 @@ export type ListKeywordLensResultsData = {
     /**
      * Platform
      */
-    platform?: "all" | "bluesky" | "lobsters" | "hackernews";
+    platform?: "all" | "bluesky" | "lobsters" | "hackernews" | "lemmy.world";
   };
   url: "/api/orgs/{org_id}/keywords/{keyword_id}/lenses/{keyword_lens_id}/results";
 };

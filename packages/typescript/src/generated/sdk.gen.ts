@@ -78,6 +78,8 @@ import type {
   ListNotificationsResponses,
   ListOrganizationKeywordLensesData,
   ListOrganizationKeywordLensesResponses,
+  ListOrganizationsData,
+  ListOrganizationsResponses,
   ListOrganizationUsersData,
   ListOrganizationUsersResponses,
   ListPendingKeywordLensResultsData,
@@ -143,6 +145,25 @@ export type Options<
    */
   meta?: keyof ClientMeta extends never ? Record<string, unknown> : ClientMeta;
 };
+
+/**
+ * List orgs
+ */
+export const listOrganizations = <ThrowOnError extends boolean = false>(
+  options?: Options<ListOrganizationsData, ThrowOnError>,
+): RequestResult<ListOrganizationsResponses, unknown, ThrowOnError> =>
+  (options?.client ?? client).get<
+    ListOrganizationsResponses,
+    unknown,
+    ThrowOnError
+  >({
+    security: [
+      { scheme: "bearer", type: "http" },
+      { name: "X-API-Key", type: "apiKey" },
+    ],
+    url: "/api/orgs",
+    ...options,
+  });
 
 /**
  * Delete keyword
@@ -855,6 +876,8 @@ export const updateKeywordLensResult = <ThrowOnError extends boolean = false>(
 
 /**
  * Start a keyword lens for a keyword
+ *
+ * Durably accepts background dispatch and returns current counts. Repeated Start reuses live dispatch without resetting progress.
  */
 export const startKeywordLens = <ThrowOnError extends boolean = false>(
   options: Options<StartKeywordLensData, ThrowOnError>,
@@ -893,6 +916,8 @@ export const getKeywordLensStatus = <ThrowOnError extends boolean = false>(
 
 /**
  * Stop a keyword lens for a keyword
+ *
+ * Stops background dispatch and live evaluations. Completed results are preserved; evaluations already executing may finish.
  */
 export const stopKeywordLens = <ThrowOnError extends boolean = false>(
   options: Options<StopKeywordLensData, ThrowOnError>,
